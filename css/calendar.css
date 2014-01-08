@@ -1,0 +1,34 @@
+.calendar-container {
+    min-height: 316px;
+}
+.event-container {
+    overflow: hidden;
+    position: absolute;
+    top: 20px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+
+.month-row {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,.2);
+    background-clip: padding-box;
+    border: solid transparent;
+    border-width: 0 0 0 7px;
+    min-height: 28px;
+    padding: 100px 0 0;
+    box-shadow: inset 1px 1px 0 rgba(0,0,0,.1),inset -1px -1px 0 rgba(0,0,0,.07);
+}
