@@ -1,5 +1,5 @@
 .calendar-container {
-    min-height: 500px;
+    min-height: 300px;
 }
 .calendar-container .event-container {
     overflow: hidden;
@@ -14,6 +14,10 @@
 .calendar-container .week-daynames, .calendar-container .week-daynames table {
     width: 100%;
     position: absolute;
+    table-layout: fixed;
+}
+.calendar-container .week-daynames th {
+    padding-left: 10px;
 }
 
 .calendar-container .month-row {
@@ -24,9 +28,11 @@
     border-bottom: 1px solid #ddd;
 }
 .calendar-container .month-row-table {
+    position: absolute;
     width: 100%;
     height: 100%;
+    table-layout: fixed;
 }
-.calendar-container .month-cell {
+.calendar-container .month-row-table td {
     border-left: 1px solid #ddd;
 }
