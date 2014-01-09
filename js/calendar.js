@@ -1,27 +1,29 @@
 (function($){
     var WK_DAYNAMES = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
     var TABLE = '<table cellpadding="0" cellspacing="0" ></table>';
-    var CELL_OF_MONTH = '<div class="day-cell-of-month" style="border-left: 1px solid #ccc; min-height:120px;" ></div>';
     /**
      * Make top elemnts for calendar.
      */
     function makeCalendarTop($wrapper, elments) {
+        var $div = $('<div class="week-daynames"></div>');
         var $table = $(TABLE);
-        $table.addClass('week-daynames');
+        $wrapper.append($div);
+        $div.append($table);
         $tr = $('<tr></tr>');
         $table.append($tr);
         for(var i = 0; i < elments.length; ++i) {
             $tr.append('<td title="'+elments[i]+'">' + elments[i] + '</td>');
         }
-        $wrapper.append($table);
         return $table;
     }
     function makeMonthCells($wrapper) {
+        var $eventContainer = $('<div class="event-container"></div>');
+        $wrapper.append($eventContainer);
         for(var y = 0; y < 5; ++y) {
             $monthRow = $('<div class="month-row"></div>');
             $monthRow.css('top', y*20 + '%');
             $monthRow.css(y == 4? 'bottom': 'height', y == 4? '0':'21%');
-            $wrapper.append($monthRow);
+            $eventContainer.append($monthRow);
             $tr = $('<tr></tr>');
             $table = $(TABLE).append($tr);
             $table.addClass('month-row-table');
@@ -38,9 +40,7 @@
         $wrapper = $(wrapper);
         $wrapper.html('');
         makeCalendarTop($wrapper, WK_DAYNAMES);
-        var $eventContainer = $('<div class="event-container"></div>');
-        $wrapper.append($eventContainer);
-        makeMonthCells($eventContainer);
+        makeMonthCells($wrapper);
     }
 
     function week(wrapper) {
