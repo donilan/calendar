@@ -18,7 +18,13 @@
   <script>
     $(function(){
     cal = new Calendar({id: 'calendar'});
-    cal2 = new Calendar();
+    var date = new Date();
+    date.setFullYear(2014, 1, 9);
+    var start = date.getTime();
+    date.setFullYear(2014, 1, 10);
+    var end = date.getTime();
+    cal.addEvent({start: start, end: end, title: 'Do something'});
+    console.log(cal);
 //    $('.calendar').calendar();
     });
   </script>

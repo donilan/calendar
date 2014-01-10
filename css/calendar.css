@@ -27,12 +27,17 @@
     overflow: hidden;
     border-bottom: 1px solid #ddd;
 }
-.calendar-container .month-row-table {
+.calendar-container .month-row-bg-table {
     position: absolute;
     width: 100%;
     height: 100%;
     table-layout: fixed;
 }
-.calendar-container .month-row-table td {
+.calendar-container .month-row-bg-table td {
     border-left: 1px solid #ddd;
+}
+.calendar-container .month-row-table {
+    position: relative;
+    table-layout: fixed;
+    width: 100%;
 }
