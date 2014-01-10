@@ -13,9 +13,10 @@ var Calendar = function(_opts){
     this._init = function() {
         this.debug('Element id [' + this.options.id + '] begin init...');
         this.calendar = $('#'+this.options.id);
+        var top = this.calendar.offset().top;
         this.calendar.html('')
             .addClass('calendar-container')
-            .height($(window).height());
+            .height($(window).height() - top);
         this._makeCalendarTop();
         this._makeMonthCells();
         this.debug('Init done.')
@@ -69,7 +70,10 @@ var Calendar = function(_opts){
         this.debug('Options id cannot be null or empty.');
         
 };
+/* Auto fix size.*/
 $(window).resize(function(){
-    if($(window).height() > 300)
-        $('.calendar-container').height($(window).height());
+    if($(window).height() > 300) {
+        var top = $('.calendar-container').offset().top;
+        $('.calendar-container').height($(window).height() - top);
+    }
 });
