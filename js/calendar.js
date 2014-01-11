@@ -63,6 +63,7 @@ var Calendar = function(_opts){
     this.data = [];
     this.rows = [];
     this.cell = [];
+
     /* Init function*/
     this._init = function() {
         this.debug('Element id [' + this.options.id + '] begin init...');
@@ -90,6 +91,7 @@ var Calendar = function(_opts){
         $div.append($table);
         $tr = $('<tr></tr>');
         $table.append($tr);
+        // Use options day names.
         for(var i = 0; i < this.options.weekDaynames.length; ++i) {
             $tr.append('<th title="'+this.options.weekDaynames[i]+'">' +
                        this.options.weekDaynames[i] + '</th>');
@@ -97,27 +99,35 @@ var Calendar = function(_opts){
     }
     /* Make background for month rows.*/
     this._makeMonthBackground = function() {
+        // Display 5x7 cells
         for(var y = 0; y < 5; ++y) {
             $monthRow = $('<div class="month-row"></div>');
             $monthRow.css('top', y*20 + '%');
             $monthRow.css(y == 4? 'bottom': 'height', y == 4? '0':'21%');
             this.eventContainer.append($monthRow);
+
+            // Background table
             $tr = $('<tr></tr>');
             $table = $(this.options.tableTmpl).append($tr);
             $table.addClass('month-row-bg-table');
             $monthRow.append($table);
 
+            // Rows table contain days and events.
             $monthRowTable = $(this.options.tableTmpl);
             $monthRowTable.addClass('month-row-table');
             $monthRow.append($monthRowTable);
             this.rows[this.rows.length] = $monthRowTable;
+
+            // This is background table, Just display some borders.
             for(var x = 0; x < 7; ++x) {
                 $tr.append('<td>&nbsp;</td>');
             }
         }
     };
 
+    /* Refresh calendar page. */
     this._refreshMonthRows = function(year, month) {
+        // Default display current month.
         now = new Date();
         if(year == undefined || month == undefined) {
             year = now.getFullYear();
@@ -132,16 +142,20 @@ var Calendar = function(_opts){
 
         for(var y = 0, i = 0; y < 5; ++y) {
             var $tr = $('<tr></tr>');
+            // clean and add new days.
             this.rows[y].html('').append($tr);
             for(var x = 0; x < 7; ++x) {
                 var $td = $('<td></td>');
+                // Display more info if first day of month.
                 if(day.getDate() != 1) {
                     $td.text(day.getDate());
                 } else {
+                    // Just display like 2014-01-01
                     $td.text(day.getFullYear() + '-' + (day.getMonth()+1) +
                              '-' + day.getDate());
                 }
                 $td.addClass('month-row-days');
+                // remove top border if first line of month.
                 if(y == 0) {
                     $td.addClass('month-row-days-fr');
                 }
