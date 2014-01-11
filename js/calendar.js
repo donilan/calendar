@@ -132,7 +132,7 @@ var Calendar = function(_opts){
 
         for(var y = 0, i = 0; y < 5; ++y) {
             var $tr = $('<tr></tr>');
-            this.rows[y].append($tr);
+            this.rows[y].html('').append($tr);
             for(var x = 0; x < 7; ++x) {
                 var $td = $('<td></td>');
                 if(day.getDate() != 1) {
