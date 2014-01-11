@@ -41,3 +41,9 @@
     table-layout: fixed;
     width: 100%;
 }
+.calendar-container .month-row-days {
+    padding-left: 5px;
+}
+.calendar-container .month-row-not-current-month {
+    color: #CCC;
+}

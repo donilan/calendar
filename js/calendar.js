@@ -111,7 +111,6 @@ var Calendar = function(_opts){
             $monthRowTable.addClass('month-row-table');
             $monthRow.append($monthRowTable);
             this.rows[this.rows.length] = $monthRowTable;
-            // TODO complete the row.
             for(var x = 0; x < 7; ++x) {
                 $tr.append('<td>&nbsp;</td>');
             }
@@ -124,18 +123,28 @@ var Calendar = function(_opts){
             year = now.getFullYear();
             month = now.getMonth();
         }
+
+        this.debug('Refresh month rows for [' + year + '-' + (month+1) + '].');
+
         firstDay = new Date();
         firstDay.setFullYear(year, month, 1);
         firstDay.addDays(-firstDay.getDay());
-        for(var i = 0; i < 35; ++i) {
-            if(i % 7 == 0) {
 
+        for(var y = 0, i = 0; y < 5; ++y) {
+            var $tr = $('<tr></tr>');
+            this.rows[y].append($tr);
+            for(var x = 0; x < 7; ++x) {
+                var $td = $('<td>'+firstDay.getDate()+'</td>');
+                $td.addClass('month-row-days');
+                if(firstDay.getMonth() != month) {
+                    $td.addClass('month-row-not-current-month');
+                }
+                $tr.append($td);
+                firstDay.addDays(1);
             }
         }
+        this.debug('Refresh month row done.')
     };
-    this._addMonthCell = function(index, span, content) {
-
-    }
 
     this._isToday = function(anyDate) {
         if(anyDate != undefined) {
