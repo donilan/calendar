@@ -126,21 +126,30 @@ var Calendar = function(_opts){
 
         this.debug('Refresh month rows for [' + year + '-' + (month+1) + '].');
 
-        firstDay = new Date();
-        firstDay.setFullYear(year, month, 1);
-        firstDay.addDays(-firstDay.getDay());
+        day = new Date();
+        day.setFullYear(year, month, 1);
+        day.addDays(-day.getDay());
 
         for(var y = 0, i = 0; y < 5; ++y) {
             var $tr = $('<tr></tr>');
             this.rows[y].append($tr);
             for(var x = 0; x < 7; ++x) {
-                var $td = $('<td>'+firstDay.getDate()+'</td>');
+                var $td = $('<td></td>');
+                if(day.getDate() != 1) {
+                    $td.text(day.getDate());
+                } else {
+                    $td.text(day.getFullYear() + '-' + (day.getMonth()+1) +
+                             '-' + day.getDate());
+                }
                 $td.addClass('month-row-days');
-                if(firstDay.getMonth() != month) {
+                if(y == 0) {
+                    $td.addClass('month-row-days-fr');
+                }
+                if(day.getMonth() != month) {
                     $td.addClass('month-row-not-current-month');
                 }
                 $tr.append($td);
-                firstDay.addDays(1);
+                day.addDays(1);
             }
         }
         this.debug('Refresh month row done.')

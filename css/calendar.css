@@ -25,7 +25,7 @@
     left: 0;
     width: 100%;
     overflow: hidden;
-    border-bottom: 1px solid #ddd;
+
 }
 .calendar-container .month-row-bg-table {
     position: absolute;
@@ -43,6 +43,11 @@
 }
 .calendar-container .month-row-days {
     padding-left: 5px;
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+}
+.calendar-container .month-row-days-fr {
+   border-top: 0px solid #ccc;
 }
 .calendar-container .month-row-not-current-month {
     color: #CCC;
