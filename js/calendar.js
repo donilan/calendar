@@ -59,7 +59,8 @@ var Calendar = function(_opts){
         tableTmpl: '<table cellpadding="0" cellspacing="0" ></table>',
         firstDayOfWeek: Calendar.MONDAY,
         monthChanged: function(){},
-        monthInitDone: function(){}
+        monthInitDone: function(){},
+        onEventClick: function(){}
     };
     this.options = $.extend({}, defaultOptions, _opts);
     this.data = [];
@@ -166,6 +167,8 @@ var Calendar = function(_opts){
                              '-' + day.getDate());
                 }
                 $td.addClass('month-row-days');
+                $td.addClass(this._getMonthCellClassByDate(day));
+                $td.attr('data-index', (y*7)+x);
                 // remove top border if first line of month.
                 if(y == 0) {
                     $td.addClass('month-row-days-fr');
@@ -182,7 +185,53 @@ var Calendar = function(_opts){
     };
 
     this.addEvent = function(event) {
-        this.data[this.data.length] = event;
+        if(event == undefined) {
+            this.debug('Function addEvent parameter event connot be null.');
+            return;
+        }
+        var idx = this.data.length;
+        if(event.id == undefined) {
+            event.id = idx;
+        }
+        this.data[idx] = event;
+        this._displayEvent(event);
+    };
+
+    this.editEvent = function(event) {
+
+    };
+    this.removeEvent = function(event) {
+
+    };
+
+    this._displayEvent = function(event) {
+        var id = event.id;
+        var startDate = new Date(event.start);
+        var endDate = new Date(event.end);
+        var colspan = endDate.getDate() - startDate.getDate();
+        var startIndex = this._getMonthCellIndexByDate(startDate);
+        if(startIndex == -1) {
+            this.debug('Event not in this month, ignore.');
+            return;
+        }
+        var startTDClass = this._getMonthCellClassByDate(startDate);
+        if(this.options.debug) {
+            this.debug(startDate + ' - ' + endDate + ' [' + event.title + 
+                       '], start index: ' + startIndex);
+        }
+
+    };
+    this._getMonthCellIndexByDate = function(day) {
+        var clazz = this._getMonthCellClassByDate(day);
+        var $td = $('.'+clazz);
+        if($td.size() < 1)
+            return -1;
+        return $td.data().index;
+    };
+
+    /* generate month cell class name. */
+    this._getMonthCellClassByDate = function(day) {
+        return 'month-cell-' + (day.getMonth() + 1) + '-' + day.getDate();
     };
 
     /* debug message */
