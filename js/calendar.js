@@ -55,9 +55,11 @@ var Calendar = function(_opts){
     var defaultOptions = {
         id: null,
         debug: true,
-        weekDaynames: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        weekDaynames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         tableTmpl: '<table cellpadding="0" cellspacing="0" ></table>',
-        onclick: function(){}
+        firstDayOfWeek: Calendar.MONDAY,
+        monthChanged: function(){},
+        monthInitDone: function(){}
     };
     this.options = $.extend({}, defaultOptions, _opts);
     this.data = [];
@@ -66,7 +68,12 @@ var Calendar = function(_opts){
 
     /* Init function*/
     this._init = function() {
-        this.debug('Element id [' + this.options.id + '] begin init...');
+        this.debug('Element id [' + this.options.id + '] init...');
+        //Make sure firstDayOfWeek is between 0 to 6
+        if(this.options.firstDayOfWeek < 0 ||
+           this.options.firstDayOfWeek > 6)
+            this.options.firstDayOfWeek = 0;
+
         this.calendar = $('#'+this.options.id);
         var top = this.calendar.offset().top;
         this.calendar.html('')
@@ -78,6 +85,7 @@ var Calendar = function(_opts){
         this._makeCalendarTop();
         this._makeMonthBackground();
         this._refreshMonthRows();
+        this.options.monthInitDone(this);
         this.debug('Init done.')
     }
 
@@ -93,8 +101,9 @@ var Calendar = function(_opts){
         $table.append($tr);
         // Use options day names.
         for(var i = 0; i < this.options.weekDaynames.length; ++i) {
-            $tr.append('<th title="'+this.options.weekDaynames[i]+'">' +
-                       this.options.weekDaynames[i] + '</th>');
+            var idx = (i + this.options.firstDayOfWeek) % 7;
+            $tr.append('<th title="'+this.options.weekDaynames[idx]+'">' +
+                       this.options.weekDaynames[idx] + '</th>');
         }
     }
     /* Make background for month rows.*/
@@ -128,18 +137,20 @@ var Calendar = function(_opts){
     /* Refresh calendar page. */
     this._refreshMonthRows = function(year, month) {
         // Default display current month.
-        now = new Date();
+        var today = new Date();
         if(year == undefined || month == undefined) {
-            year = now.getFullYear();
-            month = now.getMonth();
+            year = today.getFullYear();
+            month = today.getMonth();
         }
 
         this.debug('Refresh month rows for [' + year + '-' + (month+1) + '].');
 
-        day = new Date();
+        var firstDay = new Date(), day = new Date();
         day.setFullYear(year, month, 1);
-        day.addDays(-day.getDay());
-
+        console.log(day.getDay());
+        var daySpan = (day.getDay() - this.options.firstDayOfWeek + 7) % 7;
+        day.addDays(-daySpan);
+        firstDay.setFullYear(day.getFullYear(), day.getMonth(), day.getDate());
         for(var y = 0, i = 0; y < 5; ++y) {
             var $tr = $('<tr></tr>');
             // clean and add new days.
@@ -166,26 +177,11 @@ var Calendar = function(_opts){
                 day.addDays(1);
             }
         }
+        this.options.monthChanged(firstDay, day, this);
         this.debug('Refresh month row done.')
     };
 
-    this._isToday = function(anyDate) {
-        if(anyDate != undefined) {
-            var now = new Date();
-            var year = anyDate.getFullYear();
-            var month = anyDate.getMonth();
-            var day = anyDate.getDate();
-            if(year == now.getFullYear() &&
-               month == now.getMonth() &&
-               day = now.getDate())
-                return true;
-        }
-        return false;
-    }
-
     this.addEvent = function(event) {
-//        console.log(event);
-//        console.log(new Date(event.start));
         this.data[this.data.length] = event;
     };
 
@@ -202,3 +198,11 @@ var Calendar = function(_opts){
         this.debug('Options id cannot be null or empty.');
         
 };
+
+Calendar.SUNDAY = 0;
+Calendar.MONDAY = 1;
+Calendar.TUESDAY = 2;
+Calendar.WEDNESDAY = 3;
+Calendar.THURSDAY = 4;
+Calendar.FRIDAY = 5;
+Calendar.SATRURDAY = 6;
